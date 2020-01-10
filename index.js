@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require('morgan');
 const taskRouter = require('./routes/tasks');
-const categoryRouter = require('./routes/category');
+const dashboard = require('./routes/category');
 const userRouter = require('./routes/users');
 const dotenv = require('dotenv').config();
 const uploadRouter = require('./routes/upload');
@@ -15,10 +15,9 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.options('*', cors());
 app.use(express.urlencoded({extended: true }));
-
 app.use(express.static(__dirname + "/public"));
-
-mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+const url = process.env.URL;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
     .then((db) => {
         console.log("Successfully connected to MongodB server");
     }, (err) => console.log(err));
@@ -26,7 +25,7 @@ mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: t
 app.use('/users', userRouter);
 app.use('/upload', uploadRouter);
 app.use(auth.verifyUser);
-app.use('/categories', categoryRouter);
+app.use('/dashboard', dashboard);
 app.use('/tasks', taskRouter);
 
 app.use((err, req, res, next) => {

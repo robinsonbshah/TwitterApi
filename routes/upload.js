@@ -26,6 +26,7 @@ const uploadRouter = express.Router();
 
 uploadRouter.route('/')
     .post(upload.single('imageFile'), (req, res) => {
+        console.log(req.file);
         res.json(req.file);
     });
 
